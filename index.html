@@ -24,7 +24,9 @@
         #checklist li { margin-bottom: 8px; font-size: 13px; border-bottom: 1px solid #f9f9f9; padding-bottom: 4px; }
         #solutionPage { display: none; background: #fffbe6; padding: 25px; border-radius: 12px; margin-top: 30px; text-align: left; border: 1px solid #ffe58f; }
         .solution-item { background: white; border: 1px solid #ddd; padding: 15px; margin-bottom: 12px; border-radius: 8px; }
-        .submit-btn { width: 100%; padding: 20px; background: #28a745; color: white; border: none; border-radius: 8px; font-size: 20px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        /* 전송 버튼 색상 HK 레드(#A7324A)로 변경 */
+        .submit-btn { width: 100%; padding: 20px; background: #A7324A; color: white; border: none; border-radius: 8px; font-size: 20px; font-weight: bold; cursor: pointer; margin-top: 20px; transition: background 0.3s; }
+        .submit-btn:hover { background: #8e2a3e; }
         #nextPage { display: none; }
         .yt-link { display: inline-block; color: #cc0000; text-decoration: none; font-size: 13px; font-weight: bold; border: 1px solid #cc0000; padding: 4px 10px; border-radius: 4px; margin-top: 8px; }
         .damper-box { display: flex; gap: 5px; margin-top: 10px; }
@@ -78,12 +80,10 @@
 
     <div id="solutionPage">
         <h2 style="color: #856404; margin-top: 0;">💡 자가 조치 가이드</h2>
-        <p style="font-size: 14px; color: #666;">아래 항목을 확인 후 체크해 주세요. 조치 안될 시 접수해 주세요.</p>
         <div id="solutionContent"></div>
         
         <div class="section" style="background: #fff; border: 2px solid #A7324A;">
             <h3 style="margin-bottom: 10px;">📝 추가 메모 (기타 요청사항)</h3>
-            <p style="font-size: 12px; color: #999; margin-bottom: 5px;">* 위에 없는 증상이나 엔지니어에게 전할 내용을 자유롭게 적어주세요.</p>
             <textarea id="extraNote" placeholder="여기에 메모를 입력하세요..." oninput="updateInfo()"></textarea>
         </div>
 
@@ -99,23 +99,15 @@
     let selections = { laser: "", head: "", oscillator: "", oscTime: "", serial: "", company: "", name: "", contact: "", issue: "", subIssue: "", solutions: [], note: "" };
     const labels = { laser: "타입", head: "헤드", oscillator: "발진기", oscTime: "시간", serial: "호기", company: "업체", name: "성함", contact: "연락처", issue: "증상", subIssue: "상세", solutions: "조치", note: "메모" };
 
-    const deepCheck = [
-        { title: '렌즈 오염 확인', desc: '렌즈의 교체 주기 및 오염 상태를 점검하세요.' },
-        { title: '빔 센터 확인', desc: '테이프 샷을 통해 빔이 중앙에 위치하는지 확인하세요.' },
-        { title: '가스압 확인', desc: '가스 온 시 실제 가압을 확인하세요.', input: true, unit: 'bar' },
-        { title: '노즐 손상 확인', desc: '노즐 끝부분의 손상이나 변형이 있는지 확인하세요.' }
-    ];
-
     const solutionData = {
         '치수불량': [{ title: '빔 센터 점검', desc: '중심 오차를 확인하세요.' }, { title: '공구 보정값 확인', desc: '소프트웨어 보정치를 점검하세요.' }],
         '절단면불량': [{ title: '렌즈 점검', desc: '보호유리 오염 여부를 확인하세요.' }, { title: 'LM 가이드 청소', desc: '청소 상태를 점검하세요.', link: 'https://youtu.be/TGo7Fj5IPZs' }],
         '센싱이상': [{ title: '노즐/세라믹 체결', desc: '세라믹 파손이나 풀림을 확인하세요.' }, { title: '오토 캘리브레이션', desc: '센싱 교정을 실행하세요.' }],
         '칠러이상': [{ title: '냉각수 수위', desc: '수량 부족 여부를 확인하세요.' }, { title: '현재 온도 확인', desc: '메인/미러 온도를 기록하세요.', input: true, unit: '도' }, { title: '필터 점검', desc: '먼지로 인한 과열인지 확인하세요.' }],
         '집진기이상': [{ title: '댐퍼 확인', desc: '댐퍼 개방도를 선택하세요.', isDamper: true }, { title: '필터 차압', desc: '차압 수치를 확인하세요.', input: true, unit: 'Pa' }],
-        '11': [{ title: '가스 점검', desc: '혼합 가스 잔량 및 레귤레이터를 확인하세요.' }],
+        '11': [{ title: '가스 점검', desc: '혼합 가구 잔량 및 레귤레이터를 확인하세요.' }],
         '21': [{ title: '가스 치환', desc: '발진기 가스 치환을 3회 반복하세요.' }],
-        '테이블세팅': [{ title: '높이 보정', desc: '세팅 가이드 영상을 참고하세요.', link: 'https://youtu.be/Dkn_zqrbNNs' }],
-        '기타': [{ title: '기타 조치', desc: '수동으로 점검 내용을 기록해 주세요.', input: true, unit: '내용' }]
+        '테이블세팅': [{ title: '높이 보정', desc: '세팅 가이드 영상을 참고하세요.', link: 'https://youtu.be/Dkn_zqrbNNs' }]
     };
 
     function selectLaser(type) {
@@ -139,7 +131,6 @@
         selections.company = document.getElementById('company').value;
         selections.name = document.getElementById('name').value;
         selections.contact = document.getElementById('contact').value;
-        // 메모(Note) 부분 업데이트 필수!
         if(document.getElementById('extraNote')) selections.note = document.getElementById('extraNote').value;
         updateChecklist();
     }
@@ -163,8 +154,6 @@
         } else if (issue === '발진기알람') {
             const alarms = ['11', '18', '21', '25', '17', '27', '28', '32', '41', '기타'];
             subContainer.innerHTML = `<div class="section"><h3>□ 알람 번호 □</h3><div class="button-group">${alarms.map(a => `<button onclick="handleSubIssueSelection('${a}', this)">${a}</button>`).join('')}</div></div>`;
-        } else if (issue === '테이블이상') {
-            handleSubIssueSelection('테이블세팅', btn);
         } else {
             subContainer.innerHTML = ""; showSolution(issue);
         }
@@ -177,7 +166,7 @@
         const page = document.getElementById('solutionPage');
         const content = document.getElementById('solutionContent');
         page.style.display = 'block';
-        const options = solutionData[key] || deepCheck;
+        const options = solutionData[key] || [{ title: '기본 점검', desc: '해당 증상에 대해 상태 확인 후 체크해 주세요.', input: true, unit: '내용' }];
         content.innerHTML = options.map((opt, idx) => `
             <div class="solution-item">
                 <div style="display: flex; align-items: flex-start; gap: 10px;">
@@ -187,7 +176,7 @@
                         <p style="font-size: 13px; color: #666; margin: 3px 0;">${opt.desc}</p>
                         ${opt.link ? `<a href="${opt.link}" target="_blank" class="yt-link">📺 가이드 영상 보기</a>` : ''}
                         ${opt.isDamper ? `<div class="damper-box">${['100%','75%','50%','25%'].map(v => `<button onclick="selectDamper('${v}', this)">${v}</button>`).join('')}</div>` : ''}
-                        ${opt.input ? `<input type="text" placeholder="수치/내용 입력 (${opt.unit})" style="margin-top: 5px;" oninput="updateSolutions()">` : ''}
+                        ${opt.input ? `<input type="text" placeholder="입력 (${opt.unit})" style="margin-top: 5px;" oninput="updateSolutions()">` : ''}
                     </div>
                 </div>
             </div>`).join('');
@@ -222,31 +211,22 @@
         for (let key in selections) {
             if (selections[key] && key !== 'solutions') html += `<li><strong>${labels[key]}:</strong> ${selections[key]}</li>`;
         }
-        if (selections.solutions.length > 0) html += `<li><strong>점검내역:</strong><br>${selections.solutions.join('<br>')}</li>`;
-        content.innerHTML = html || "<li>입력된 정보 없음</li>";
+        if (selections.solutions.length > 0) html += `<li><strong>조치:</strong><br>${selections.solutions.join('<br>')}</li>`;
+        content.innerHTML = html || "<li>입력 정보 없음</li>";
     }
 
     function toggleChecklist() { document.getElementById('checklist').classList.toggle('hidden'); }
 
     async function submitToHosting() {
-        if (!selections.company || !selections.contact) return alert("필수 입력 사항을 확인해 주세요.");
-        
+        if (!selections.company || !selections.contact) return alert("업체명과 연락처는 필수입니다.");
         const scriptURL = 'https://script.google.com/macros/s/AKfycbzb7atFl_gZq5C2FwV_9wYzzZKx1Kzsu0ucF5PV8KJoas7rDsLnDp8yjW6y-2b-aWbb/exec';
-
-        // 🌟 메모(note) 항목이 누락되지 않도록 전송 객체에 명시
-        const finalData = {
-            timestamp: new Date().toLocaleString(),
-            ...selections,
-            solutions: selections.solutions.join(', '),
-            note: selections.note // 이 메모가 시트로 날아갑니다.
-        };
-
+        const finalData = { timestamp: new Date().toLocaleString(), ...selections, solutions: selections.solutions.join(', '), note: selections.note };
         try {
             await fetch(scriptURL, { method: 'POST', body: JSON.stringify(finalData) });
-            alert("접수가 성공적으로 완료되었습니다. 곧 연락드리겠습니다.");
+            alert("접수가 완료되었습니다. 담당 엔지니어가 곧 확인하겠습니다.");
             location.reload();
         } catch (error) {
-            alert("전송 중 오류가 발생했습니다. 구글 시트 배포 설정을 확인하세요.");
+            alert("전송 오류! 구글 시트 배포 설정을 확인하세요.");
         }
     }
 </script>
