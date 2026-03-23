@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HK Laser & System 스마트 서비스 접수</title>
+  <style>
+    body { font-family: 'Malgun Gothic', sans-serif; text-align: center; margin: 0; padding: 0; background: #f0f2f5; }
+    .container { max-width: 800px; margin: 20px auto; padding: 30px; background: white; box-shadow: 0 4px 20px rgba(0,0,0,0.08); min-height: 85vh; border-radius: 12px; }
+    h1, h2, h3 { color: #A7324A; }
+    .section { margin-top: 25px; padding: 20px; border: 1px solid #eee; border-radius: 10px; background: #fff; }
+    .button-group { margin-top: 15px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+    .button-group button { background-color: #f8f9fa; border: 1px solid #ddd; color: #444; padding: 12px 20px; cursor: pointer; font-size: 14px; border-radius: 8px; transition: 0.2s; }
+    .button-group button:hover { border-color: #A7324A; color: #A7324A; }
+    .button-group button.selected { background-color: #A7324A; color: white; border-color: #A7324A; font-weight: bold; }
+    .instruction-box { background: #fff4f6; border-left: 5px solid #A7324A; padding: 15px; margin: 15px 0; text-align: left; font-size: 14px; line-height: 1.6; color: #333; }
+    .damper-group { display: flex; gap: 5px; margin-top: 10px; }
+    .damper-group button { padding: 8px 15px; font-size: 12px; flex: 1; }
+    input[type="text"], input[type="number"], textarea { padding: 10px; margin: 5px; border: 1px solid #ccc; border-radius: 6px; outline: none; box-sizing: border-box; }
+    textarea { width: 100%; height: 100px; resize: none; margin-top: 10px; }
+    #checklist { position: fixed; bottom: 30px; right: 30px; background: #fff; border: 2px solid #A7324A; border-radius: 12px; width: 280px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 2000; transition: transform 0.3s ease, opacity 0.3s; }
+    #checklist.hidden { transform: translateX(340px); opacity: 0; pointer-events: none; }
+    #checklist .header { background: #A7324A; color: white; padding: 12px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+    #checklist .body { padding: 15px; max-height: 450px; overflow-y: auto; text-align: left; }
+    #checklist ul { padding-left: 15px; text-align: left; margin: 0; list-style-type: '✔ '; }
+    #checklist li { margin-bottom: 10px; color: #333; font-size: 13px; line-height: 1.5; border-bottom: 1px solid #f9f9f9; padding-bottom: 5px; }
+    #restoreBtn { position: fixed; bottom: 30px; right: 30px; width: 54px; height: 54px; background: #A7324A; color: white; border-radius: 50%; display: none; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 15px rgba(167, 50, 74, 0.4); z-index: 1999; font-size: 24px; transition: 0.2s; }
+    #solutionPage { display: none; background: #fffbe6; border: 1px solid #ffe58f; padding: 25px; border-radius: 12px; margin-top: 30px; text-align: left; }
+    .solution-item { background: white; border: 1px solid #ddd; padding: 15px; margin-bottom: 12px; border-radius: 8px; }
+    .sol-header { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
+    .val-input { background: #f9f9f9; padding: 10px; border-radius: 6px; margin-top: 8px; border: 1px dashed #ccc; }
+    .submit-btn { width: 100%; padding: 18px; background: #28a745; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+    #nextPage { display: none; }
+    .unknown-box { margin-top: 15px; padding: 15px; border: 1px solid #A7324A; border-radius: 10px; background: #fff; text-align: left; }
+    .yt-link { display: inline-block; margin-top: 8px; color: #cc0000; text-decoration: none; font-size: 13px; font-weight: bold; border: 1px solid #cc0000; padding: 3px 8px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div id="restoreBtn" onclick="toggleChecklist()">📋</div>
+  <div id="checklist">
+    <div class="header" onclick="toggleChecklist()"><strong>📋 점검 내용</strong><span>▼</span></div>
+    <div class="body"><ul id="checklistContent"><li>입력된 정보 없음</li></ul></div>
+  </div>
+  <div class="container" id="mainPage">
+    <h1>(주)HK Laser & System<br>스마트 서비스 가이드</h1>
+    <div class="section">
+      <h3>1. 레이저 종류 선택</h3>
+      <div class="button-group"><button id="btn-CO2" onclick="selectLaser('CO2')">CO2 레이저</button><button id="btn-FIBER" onclick="selectLaser('FIBER')">FIBER 레이저</button></div>
+    </div>
+    <div id="options"></div>
+    <div class="section">
+      <h3>2. 고객 정보 입력</h3>
+      <input type="text" id="serial" placeholder="호기수 입력" oninput="updateInfo()">
+      <input type="text" id="company" placeholder="업체명 입력" oninput="updateInfo()">
+      <div style="margin-top: 5px;"><input type="text" id="name" placeholder="이름 입력" oninput="updateInfo()"><input type="text" id="contact" placeholder="연락처 입력" oninput="updateInfo()"></div>
+    </div>
+    <div class="nav-buttons"><button onclick="goToNextPage()" style="padding: 16px 50px; background: #A7324A; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px;">다음 단계: 증상 선택</button></div>
+  </div>
+  <div class="container" id="nextPage">
+    <h1>증상 진단 및 솔루션</h1>
+    <div class="section"><h3>□ 주요 증상 선택 □</h3><div class="button-group" id="issueButtons"></div><div id="issueUnknownArea"></div></div>
+    <div id="subIssueContainer"></div>
+    <div id="solutionPage">
+      <h2 style="color: #856404; margin-top: 0;">💡 자가 조치 가이드</h2>
+      <div id="solutionContent"></div>
+      <button class="submit-btn" onclick="submitToHosting()">🚀 최종 서비스 접수 전송</button>
+    </div>
+    <div class="nav-buttons" style="margin-top: 20px;"><button onclick="location.reload()" style="background: #666; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer;">처음으로</button></div>
+  </div>
+
+  <script>
+    let selections = { laser: "", head: "", oscillator: "", oscTime: "", serial: "", company: "", name: "", contact: "", issue: "", subIssue: "", solutions: [] };
+    const labels = { laser: "레이저", head: "헤드", oscillator: "발진기", oscTime: "발진기 시간", serial: "호기수", company: "업체명", name: "성함", contact: "연락처", issue: "증상", subIssue: "상세현상", solutions: "조치사항" };
+
+    const deepCheck = [
+      { title: '렌즈 확인', desc: '렌즈의 교체 주기 및 오염 유/무를 확인하세요.' },
+      { title: '빔센터 점검', desc: '테이프 샷을 통해 빔이 노즐의 정중앙에 위치하는지 확인하세요.' },
+      { title: '가스압 확인', desc: '산소(5바), 질소(15바) 입력 후 가스온 점검', inputType: 'text', placeholder: '가스압 수치' },
+      { title: '노즐손상 확인', desc: '노즐 끝부분의 손상 여부를 확인하세요.' },
+      { title: '센싱이상 확인', desc: '오토켈리브레이션이 정상인지 확인하세요.' },
+      { title: '빔파워 확인', desc: '4000W, 2000Hz, 100%, 5분 점검', inputType: 'text', placeholder: '5분 후 파워값' },
+      { title: '기타 직접 입력' }
+    ];
+
+    const chillerCheck = [
+      { title: '냉각수량 확인', desc: '칠러 탱크 내 냉각수 수위가 충분한지 확인하세요.' },
+      { title: '냉각수 온도확인', desc: '메인 및 미러 온도를 입력하세요.', inputType: 'text', placeholder: '메인: 00도 / 미러: 00도 입력' },
+      { title: '압력게이지 확인', desc: '칠러 전면 압력 게이지가 정상 범위인지 확인하세요.' },
+      { title: '냉각수 교체주기 확인', desc: '마지막 냉각수 교체 시기를 입력하세요.', inputType: 'text', placeholder: '교체 시기 입력' },
+      { title: '매쉬망필터 청소상태확인', desc: '칠러 먼지거름망의 청소 상태를 확인하세요.' },
+      { title: '냉각수 필터상태확인', desc: '냉각수 필터 오염 및 교체 필요성을 확인하세요.' },
+      { title: '기타 직접 입력' }
+    ];
+
+    const solutionData = {
+      '치수불량': [{ title: '빔센터 점검', desc: '빔 중심 확인 및 테이프 샷 점검' }, { title: '공구보정', desc: '소프트웨어에서 보정값 수정' }, { title: '기타 직접 입력' }],
+      '절단면불량': [{ title: '렌즈 확인', desc: '오염 유무 확인' }, { title: '빔센터 점검', desc: '빔 중심 확인' }, { title: 'LM/렉 유지보수', desc: '청소 상태 점검', link: 'https://youtu.be/TGo7Fj5IPZs', linkText: '📺 유튜브 가이드 보기' }, { title: '기타 직접 입력' }],
+      '피어싱불량': deepCheck,
+      '절단 중 불량': deepCheck,
+      '센싱이상': [{ title: '노즐 확인', desc: '노즐 체결 상태 확인' }, { title: '세라믹 확인', desc: '파손 및 오염 확인' }, { title: '오토켈리브레이션 확인', desc: 'HMI 화면에서 재실행' }, { title: '기타 직접 입력' }],
+      '칠러이상': chillerCheck,
+      '집진불량': [{ title: '댐퍼 확인', desc: '댐퍼 개방 상태 확인', isDamper: true }, { title: '차압 확인', desc: '현재 수치 입력', inputType: 'text', placeholder: '차압 수치' }, { title: '에어압 확인 (5bar)', desc: '레귤레이터 압력 확인', inputType: 'text', placeholder: '현재 에어압' }, { title: '기타 직접 입력' }],
+      '이상소음(모터)': [{ title: '모터 점검', desc: '베어링 및 과열 확인' }, { title: '기타 직접 입력' }],
+      '이상소음(펄싱불량)': [{ title: '펄싱 밸브 점검', desc: '필터 청소 작동 확인' }, { title: '기타 직접 입력' }],
+      '11': [{ title: '가스 점검', desc: '혼합가스 잔량 확인' }, { title: '기타 직접 입력' }],
+      '18': [{ title: '커버 점검', desc: '발진기 커버 닫힘 확인' }, { title: '기타 직접 입력' }],
+      '21': [{ title: '혼합가스 치환', desc: '3회 반복 치환' }, { title: '기타 직접 입력' }],
+      '25': [{ title: '칠러/가스 점검', desc: '칠러 온도 및 가스 치환 확인' }, { title: '기타 직접 입력' }],
+      '26': [{ title: '칠러/가스 점검', desc: '칠러 온도 및 가스 치환 확인' }, { title: '기타 직접 입력' }],
+      '17': chillerCheck, '27': chillerCheck, '28': chillerCheck, '32': chillerCheck, '33': chillerCheck, '34': chillerCheck, '41': chillerCheck, '42': chillerCheck, '43': chillerCheck,
+      '테이블세팅': [{ title: '세팅 가이드', desc: '영상을 참고하세요.', link: 'https://youtu.be/Dkn_zqrbNNs', linkText: '📺 세팅 영상 보기' }, { title: '기타 직접 입력' }]
+    };
+
+    function selectLaser(type) {
+      selections.laser = type;
+      document.querySelectorAll('#mainPage .button-group button').forEach(b => b.classList.remove('selected'));
+      document.getElementById(`btn-${type}`).classList.add('selected');
+      const headList = type === 'CO2' ? ['S3헤드', 'S3프리스텍헤드', 'S5헤드', '기타'] : ['RAYTOOLS', 'HY3.0', 'PROCUTTER', 'HSG', 'BOCI', '기타'];
+      const oscList = type === 'CO2' ? ['파나소닉8형', '파나소닉10형', 'PRC발진기', '기타'] : ['NLIGHT', 'IPG', 'MAX', 'RAYCUS', '기타'];
+      document.getElementById("options").innerHTML = `<div class="section"><h3>□ 헤드 종류 □</h3><div class="button-group">${headList.map(item => `<button onclick="handleHeadSelection('${item}', this)">${item}</button>`).join('')}</div><div id="headUnknownArea"></div></div><div class="section"><h3>□ 발진기 종류 □</h3><div class="button-group">${oscList.map(item => `<button onclick="handleOscSelection('${item}', this)">${item}</button>`).join('')}</div><div id="oscUnknownArea"></div></div><div class="section"><h3>□ 발진기 시간 입력 □</h3><input type="number" oninput="selections.oscTime = this.value; updateChecklist();" placeholder="시간 입력"></div>`;
+      updateChecklist();
+    }
+    function handleHeadSelection(val, btn) { highlightButton(btn); selections.head = val; document.getElementById("headUnknownArea").innerHTML = (val === '기타') ? createUnknownInput('head') : ""; updateChecklist(); }
+    function handleOscSelection(val, btn) { highlightButton(btn); selections.oscillator = val; document.getElementById("oscUnknownArea").innerHTML = (val === '기타') ? createUnknownInput('oscillator') : ""; updateChecklist(); }
+    function createUnknownInput(type) { return `<div class="unknown-box"><strong>⚠️ 기타 내용 입력:</strong><textarea oninput="updateUnknownText('${type}', this.value)" placeholder="상세 정보를 적어주세요."></textarea></div>`; }
+    function updateUnknownText(type, val) { selections[type] = `기타(${val})`; updateChecklist(); }
+    function highlightButton(btn) { Array.from(btn.parentElement.children).forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); }
+    function updateInfo() { selections.serial = document.getElementById("serial").value; selections.company = document.getElementById("company").value; selections.name = document.getElementById("name").value; selections.contact = document.getElementById("contact").value; updateChecklist(); }
+    function goToNextPage() {
+      if (!selections.laser) { alert("레이저를 선택해주세요."); return; }
+      document.getElementById("mainPage").style.display = 'none';
+      document.getElementById("nextPage").style.display = 'block';
+      const issues = ['절단이상', '센싱이상', '부팅이상', '칠러이상', '집진기이상', '발진기알람', '테이블 이상', '기타'];
+      document.getElementById("issueButtons").innerHTML = issues.map(issue => `<button onclick="handleIssueSelection('${issue}', this)">${issue}</button>`).join('');
+    }
+    function handleIssueSelection(issue, btn) {
+      highlightButton(btn);
+      selections.issue = issue; selections.subIssue = ""; selections.solutions = [];
+      const subContainer = document.getElementById("subIssueContainer");
+      const solPage = document.getElementById("solutionPage");
+      if (issue === '기타') { subContainer.innerHTML = ""; solPage.style.display = 'none'; document.getElementById("issueUnknownArea").innerHTML = createUnknownInput('issue'); }
+      else if (issue === '센싱이상' || issue === '칠러이상') { document.getElementById("issueUnknownArea").innerHTML = ""; subContainer.innerHTML = ""; showSolution(issue); }
+      else {
+        document.getElementById("issueUnknownArea").innerHTML = "";
+        const subIssueData = { 
+          '절단이상': ['치수불량', '절단면불량', '피어싱불량', '절단 중 불량', '기타'], 
+          '집진기이상': ['집진불량', '이상소음(모터)', '이상소음(펄싱불량)', '필터교체시기', '기타'], 
+          '발진기알람': ['11', '18', '21', '25', '26', '17', '27', '28', '32', '33', '34', '41', '42', '43', '기타'], 
+          '테이블 이상': ['테이블세팅', '기타'] 
+        };
+        const options = subIssueData[issue] || ['기타'];
+        subContainer.innerHTML = `<div class="section"><h3>□ 상세 현상 선택 □</h3><div class="button-group">${options.map(opt => `<button onclick="handleSubIssueSelection('${opt}', this)">${opt}</button>`).join('')}</div><div id="subUnknownArea"></div></div>`;
+        solPage.style.display = 'none';
+      }
+      updateChecklist();
+    }
+    function handleSubIssueSelection(opt, btn) { highlightButton(btn); selections.subIssue = opt; if (opt === '기타') { document.getElementById("subUnknownArea").innerHTML = createUnknownInput('subIssue'); document.getElementById("solutionPage").style.display = 'none'; } else { document.getElementById("subUnknownArea").innerHTML = ""; showSolution(opt); } updateChecklist(); }
+    function showSolution(key) {
+      const page = document.getElementById("solutionPage");
+      const content = document.getElementById("solutionContent");
+      page.style.display = 'block';
+      const options = solutionData[key] || [];
+      content.innerHTML = options.map((opt, index) => {
+        if (opt.title === '기타 직접 입력') return `<div class="solution-item"><strong>기타 직접 조치 내용</strong><input type="text" style="width:95%; margin-top:10px;" placeholder="조치 내용 입력" oninput="updateSolutionsArray()"></div>`;
+        if (opt.isDamper) return `<div class="solution-item"><div class="sol-header"><input type="checkbox" id="cb_damper" onchange="updateSolutionsArray()"><div><strong>${opt.title}</strong><p>${opt.desc}</p></div></div><div class="button-group damper-group">${['100%', '75%', '50%', '25%'].map(v => `<button onclick="selectDamper('${v}', this)">${v}</button>`).join('')}</div></div>`;
+        return `<div class="solution-item"><div class="sol-header" onclick="toggleSolution('${opt.title}', 'cb_${index}')"><input type="checkbox" id="cb_${index}" onchange="updateSolutionsArray()" onclick="event.stopPropagation()"><div><strong>${opt.title}</strong><p>${opt.desc}</p>${opt.link ? `<a href="${opt.link}" target="_blank" class="yt-link">${opt.linkText}</a>` : ''}</div></div>${opt.inputType ? `<div class="val-input"><input type="text" style="width:90%" placeholder="${opt.placeholder}" oninput="updateSolutionsArray()"></div>` : ''}</div>`;
+      }).join('');
+    }
+    let selectedDamper = "";
+    function selectDamper(val, btn) { Array.from(btn.parentElement.children).forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); selectedDamper = val; document.getElementById('cb_damper').checked = true; updateSolutionsArray(); }
+    function toggleSolution(title, cbId) { const cb = document.getElementById(cbId); if(cb) cb.checked = !cb.checked; updateSolutionsArray(); }
+    function updateSolutionsArray() {
+      selections.solutions = [];
+      document.querySelectorAll('.solution-item').forEach(item => {
+        const cb = item.querySelector('input[type="checkbox"]');
+        if (cb && cb.checked) {
+          const strong = item.querySelector('strong');
+          const title = strong ? strong.innerText : "";
+          const input = item.querySelector('.val-input input');
+          if (title === '댐퍼 확인') selections.solutions.push(`댐퍼 확인 (${selectedDamper || "미선택"})`);
+          else selections.solutions.push(input && input.value ? `${title} (${input.value})` : title);
+        }
+      });
+      updateChecklist();
+    }
+    function updateChecklist() {
+      const content = document.getElementById("checklistContent");
+      let html = "";
+      for (let key in selections) {
+        if (key === 'solutions' && selections.solutions.length > 0) html += `<li><strong>조치사항:</strong><br>- ${selections.solutions.join('<br>- ')}</li>`;
+        else if (selections[key]) html += `<li><strong>${labels[key]}:</strong> ${selections[key]}</li>`;
+      }
+      content.innerHTML = html || "<li>입력된 정보 없음</li>";
+    }
+    function toggleChecklist() { 
+      const checklist = document.getElementById("checklist");
+      const restoreBtn = document.getElementById("restoreBtn");
+      checklist.classList.toggle("hidden"); 
+      restoreBtn.style.display = checklist.classList.contains("hidden") ? "flex" : "none";
+    }
+    function submitToHosting() {
+      if (!selections.company || !selections.contact) { alert("업체명과 연락처를 입력해 주세요."); return; }
+      alert(`${selections.company}님, 데이터 전송 기능은 동주님이 구글 웹앱 URL을 설정하면 활성화됩니다.\n지금은 점검 내용을 캡쳐해서 보내주세요!`);
+    }
+  </script>
+</body>
+</html>
