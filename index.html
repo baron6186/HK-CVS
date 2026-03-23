@@ -5,152 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HK Laser & System 스마트 서비스 접수</title>
     <style>
-        /* 기본 스타일 설정 */
-        body { 
-            font-family: 'Malgun Gothic', sans-serif; 
-            text-align: center; 
-            margin: 0; 
-            padding: 0; 
-            background: #f0f2f5; 
-        }
-        .container { 
-            max-width: 800px; 
-            margin: 20px auto; 
-            padding: 30px; 
-            background: white; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
-            min-height: 85vh; 
-            border-radius: 12px; 
-        }
+        body { font-family: 'Malgun Gothic', sans-serif; text-align: center; margin: 0; padding: 0; background: #f0f2f5; }
+        .container { max-width: 800px; margin: 20px auto; padding: 30px; background: white; box-shadow: 0 4px 20px rgba(0,0,0,0.08); min-height: 85vh; border-radius: 12px; }
         h1, h2, h3 { color: #A7324A; }
-        .section { 
-            margin-top: 25px; 
-            padding: 20px; 
-            border: 1px solid #eee; 
-            border-radius: 10px; 
-            background: #fff; 
-        }
-        .button-group { 
-            margin-top: 15px; 
-            display: flex; 
-            flex-wrap: wrap; 
-            justify-content: center; 
-            gap: 10px; 
-        }
-        .button-group button { 
-            background-color: #f8f9fa; 
-            border: 1px solid #ddd; 
-            color: #444; 
-            padding: 12px 20px; 
-            cursor: pointer; 
-            font-size: 14px; 
-            border-radius: 8px; 
-            transition: 0.2s; 
-        }
-        .button-group button:hover { 
-            border-color: #A7324A; 
-            color: #A7324A; 
-        }
-        .button-group button.selected { 
-            background-color: #A7324A; 
-            color: white; 
-            border-color: #A7324A; 
-            font-weight: bold; 
-        }
-        input[type="text"], input[type="number"], textarea { 
-            padding: 12px; 
-            margin: 5px; 
-            border: 1px solid #ccc; 
-            border-radius: 6px; 
-            outline: none; 
-            box-sizing: border-box; 
-        }
-        textarea { 
-            width: 100%; 
-            height: 100px; 
-            resize: none; 
-            margin-top: 10px; 
-        }
-        /* 우측 하단 플로팅 체크리스트 */
-        #checklist { 
-            position: fixed; 
-            bottom: 30px; 
-            right: 30px; 
-            background: #fff; 
-            border: 2px solid #A7324A; 
-            border-radius: 12px; 
-            width: 280px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
-            z-index: 2000; 
-            transition: transform 0.3s ease; 
-        }
-        #checklist.hidden { 
-            transform: translateX(340px); 
-        }
-        #checklist .header { 
-            background: #A7324A; 
-            color: white; 
-            padding: 12px; 
-            border-radius: 8px 8px 0 0; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            cursor: pointer; 
-        }
-        #checklist .body { 
-            padding: 15px; 
-            max-height: 400px; 
-            overflow-y: auto; 
-            text-align: left; 
-        }
-        #checklist ul { 
-            padding-left: 15px; 
-            margin: 0; 
-            list-style-type: '✔ '; 
-        }
-        #checklist li { 
-            margin-bottom: 8px; 
-            font-size: 13px; 
-            border-bottom: 1px solid #f9f9f9; 
-        }
-        #solutionPage { 
-            display: none; 
-            background: #fffbe6; 
-            padding: 25px; 
-            border-radius: 12px; 
-            margin-top: 30px; 
-            text-align: left; 
-        }
-        .solution-item { 
-            background: white; 
-            border: 1px solid #ddd; 
-            padding: 15px; 
-            margin-bottom: 10px; 
-            border-radius: 8px; 
-        }
-        .submit-btn { 
-            width: 100%; 
-            padding: 20px; 
-            background: #28a745; 
-            color: white; 
-            border: none; 
-            border-radius: 8px; 
-            font-size: 18px; 
-            font-weight: bold; 
-            cursor: pointer; 
-        }
+        .section { margin-top: 25px; padding: 20px; border: 1px solid #eee; border-radius: 10px; background: #fff; }
+        .button-group { margin-top: 15px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+        .button-group button { background-color: #f8f9fa; border: 1px solid #ddd; color: #444; padding: 12px 20px; cursor: pointer; font-size: 14px; border-radius: 8px; transition: 0.2s; }
+        .button-group button:hover { border-color: #A7324A; color: #A7324A; }
+        .button-group button.selected { background-color: #A7324A; color: white; border-color: #A7324A; font-weight: bold; }
+        input[type="text"], input[type="number"], textarea { padding: 12px; margin: 5px; border: 1px solid #ccc; border-radius: 6px; outline: none; box-sizing: border-box; }
+        textarea { width: 100%; height: 100px; resize: none; margin-top: 10px; }
+        #checklist { position: fixed; bottom: 30px; right: 30px; background: #fff; border: 2px solid #A7324A; border-radius: 12px; width: 280px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 2000; transition: transform 0.3s ease; }
+        #checklist.hidden { transform: translateX(340px); }
+        #checklist .header { background: #A7324A; color: white; padding: 12px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        #checklist .body { padding: 15px; max-height: 400px; overflow-y: auto; text-align: left; }
+        #checklist ul { padding-left: 15px; margin: 0; list-style-type: '✔ '; }
+        #checklist li { margin-bottom: 8px; font-size: 13px; border-bottom: 1px solid #f9f9f9; }
+        #solutionPage { display: none; background: #fffbe6; padding: 25px; border-radius: 12px; margin-top: 30px; text-align: left; }
+        .solution-item { background: white; border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 8px; }
+        .submit-btn { width: 100%; padding: 20px; background: #28a745; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; }
         #nextPage { display: none; }
-        .yt-link { 
-            display: inline-block; 
-            color: #cc0000; 
-            text-decoration: none; 
-            font-size: 13px; 
-            font-weight: bold; 
-            border: 1px solid #cc0000; 
-            padding: 3px 8px; 
-            border-radius: 4px; 
-            margin-top: 5px;
-        }
+        .yt-link { display: inline-block; color: #cc0000; text-decoration: none; font-size: 13px; font-weight: bold; border: 1px solid #cc0000; padding: 3px 8px; border-radius: 4px; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -169,7 +44,6 @@
 
 <div class="container" id="mainPage">
     <h1>(주)HK Laser & System<br>스마트 서비스 가이드</h1>
-    
     <div class="section">
         <h3>1. 레이저 장비 종류</h3>
         <div class="button-group">
@@ -177,9 +51,7 @@
             <button id="btn-FIBER" onclick="selectLaser('FIBER')">FIBER 레이저</button>
         </div>
     </div>
-
     <div id="options"></div>
-
     <div class="section">
         <h3>2. 고객 및 장비 정보</h3>
         <input type="text" id="serial" placeholder="장비 호기수 (예: 1234)" oninput="updateInfo()">
@@ -189,7 +61,6 @@
             <input type="text" id="contact" placeholder="연락처 (필수)" oninput="updateInfo()">
         </div>
     </div>
-
     <div style="margin-top: 30px;">
         <button onclick="goToNextPage()" style="padding: 18px 60px; background: #A7324A; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 17px;">
             증상 진단 시작하기 →
@@ -199,27 +70,21 @@
 
 <div class="container" id="nextPage">
     <h1>증상 선택 및 조치 방법</h1>
-    
     <div class="section">
         <h3>□ 어떤 증상이 있나요? □</h3>
         <div class="button-group" id="issueButtons"></div>
     </div>
-
     <div id="subIssueContainer"></div>
-
     <div id="solutionPage">
         <h2 style="color: #856404; margin-top: 0;">💡 자가 조치 가이드</h2>
         <p style="font-size: 14px; color: #666;">아래 항목을 점검한 후 체크해 주세요.</p>
         <div id="solutionContent"></div>
-        
         <div class="section" style="background: #fff;">
             <h3>추가 요청 사항</h3>
-            <textarea id="extraNote" placeholder="기타 특이사항이나 엔지니어에게 전달할 내용을 적어주세요." oninput="updateInfo()"></textarea>
+            <textarea id="extraNote" placeholder="기타 특이사항을 적어주세요." oninput="updateInfo()"></textarea>
         </div>
-
         <button class="submit-btn" onclick="submitToHosting()">🚀 최종 서비스 접수 전송</button>
     </div>
-
     <div style="margin-top: 25px;">
         <button onclick="location.reload()" style="background: #666; color: white; border: none; padding: 12px 30px; border-radius: 8px; cursor: pointer;">
             처음으로 돌아가기
@@ -228,256 +93,50 @@
 </div>
 
 <script>
-    // 모든 데이터를 관리하는 객체
-    let selections = {
-        laser: "",
-        head: "",
-        oscillator: "",
-        oscTime: "",
-        serial: "",
-        company: "",
-        name: "",
-        contact: "",
-        issue: "",
-        subIssue: "",
-        solutions: [],
-        note: ""
-    };
+    let selections = { laser: "", head: "", oscillator: "", oscTime: "", serial: "", company: "", name: "", contact: "", issue: "", subIssue: "", solutions: [], note: "" };
+    const labels = { laser: "장비타입", head: "헤드종류", oscillator: "발진기", oscTime: "사용시간", serial: "호기수", company: "업체명", name: "성함", contact: "연락처", issue: "주요증상", subIssue: "상세현상", solutions: "점검내역", note: "메모" };
 
-    const labels = {
-        laser: "장비타입",
-        head: "헤드종류",
-        oscillator: "발진기",
-        oscTime: "사용시간",
-        serial: "호기수",
-        company: "업체명",
-        name: "성함",
-        contact: "연락처",
-        issue: "주요증상",
-        subIssue: "상세현상",
-        solutions: "점검내역",
-        note: "메모"
-    };
-
-    // 정밀 점검 리스트 (반복 사용)
-    const deepCheckList = [
-        { title: '렌즈 오염 점검', desc: '렌즈의 교체 주기 및 오염 상태를 육안으로 확인하세요.' },
-        { title: '빔 센터 확인', desc: '테이프 샷을 찍어 노즐 중앙에 빔이 오는지 확인하세요.' },
-        { title: '가스 입력압 확인', desc: '가스 온 상태에서 레귤레이터 압력을 확인하세요.', input: true, unit: 'bar' },
-        { title: '노즐 손상 점검', desc: '노즐 끝부분의 변형이나 손상이 있는지 확인하세요.' },
-        { title: '빔 파워 점검 (5분)', desc: '4000W 기준 5분간 파워 변동을 확인하세요.', input: true, unit: 'W' }
-    ];
-
-    // 증상별 솔루션 데이터
     const solutionData = {
-        '치수불량': [
-            { title: '빔 센터 확인', desc: '중심이 맞지 않으면 치수 오차가 발생합니다.' },
-            { title: '공구 보정값 확인', desc: '소프트웨어의 보정치(Kerf)를 점검하세요.' }
-        ],
-        '절단면불량': [
-            { title: '렌즈 보호유리 점검', desc: '오염이 있으면 절단 품질이 급격히 저하됩니다.' },
-            { title: '초점거리(Focus) 점검', desc: '재질별 적정 초점 위치인지 확인하세요.' },
-            { title: 'LM 가이드 청소', desc: '이송부 오염은 절단면 물결 무늬의 원인입니다.', link: 'https://youtu.be/TGo7Fj5IPZs' }
-        ],
-        '센싱이상': [
-            { title: '노즐/세라믹 체결', desc: '세라믹 파손이나 노즐 풀림을 확인하세요.' },
-            { title: '오토 캘리브레이션', desc: 'HMI 화면에서 센싱 교정을 다시 실행하세요.' }
-        ],
-        '칠러이상': [
-            { title: '냉각수 수위 확인', desc: '수위 게이지가 정상 범위인지 확인하세요.' },
-            { title: '현재 온도 확인', desc: '메인/미러 온도를 입력해 주세요.', input: true, unit: '도' },
-            { title: '필터/매쉬망 청소', desc: '먼지로 인한 과열인지 확인하세요.' }
-        ],
-        '11': [{ title: '혼합 가스 확인', desc: '가스 잔량 및 혼합비 레귤레이터를 점검하세요.' }],
-        '21': [{ title: '가스 치환 실행', desc: '발진기 내부 가스 치환을 3회 이상 수행하세요.' }],
-        '테이블세팅': [{ title: '높이 보정 가이드', desc: '아래 영상을 보고 세팅을 시도하세요.', link: 'https://youtu.be/Dkn_zqrbNNs' }]
+        '치수불량': [{ title: '빔 센터 확인', desc: '중심 오차를 점검하세요.' }, { title: '공구 보정값 확인', desc: '소프트웨어 보정치 점검.' }],
+        '절단면불량': [{ title: '렌즈 보호유리 점검', desc: '오염 여부를 확인하세요.' }, { title: 'LM 가이드 청소', desc: '이송부 오염 점검.', link: 'https://youtu.be/TGo7Fj5IPZs' }],
+        '센싱이상': [{ title: '노즐/세라믹 체결', desc: '파손이나 풀림을 확인하세요.' }, { title: '오토 캘리브레이션', desc: 'HMI 센싱 교정 실행.' }],
+        '칠러이상': [{ title: '냉각수 수위 확인', desc: '수위 게이지 정상 범위 확인.' }, { title: '현재 온도 확인', desc: '온도 입력 필수.', input: true, unit: '도' }]
     };
 
-    // 기능 함수들 시작
     function selectLaser(type) {
         selections.laser = type;
         document.getElementById('btn-CO2').classList.remove('selected');
         document.getElementById('btn-FIBER').classList.remove('selected');
         document.getElementById('btn-' + type).classList.add('selected');
-
         let heads = type === 'CO2' ? ['S3헤드', 'S3프리스텍', 'S5헤드', '기타'] : ['RAYTOOLS', 'HY3.0', 'PROCUTTER', '기타'];
         let oscs = type === 'CO2' ? ['파나소닉 8형', '파나소닉 10형', 'PRC', '기타'] : ['NLIGHT', 'IPG', 'MAX', '기타'];
-
-        let html = `
-            <div class="section">
-                <h3>□ 장착 헤드 종류 □</h3>
-                <div class="button-group">
-                    ${heads.map(h => `<button onclick="selections.head='${h}'; highlightButton(this); updateChecklist();">${h}</button>`).join('')}
-                </div>
-            </div>
-            <div class="section">
-                <h3>□ 발진기 제조사 □</h3>
-                <div class="button-group">
-                    ${oscs.map(o => `<button onclick="selections.oscillator='${o}'; highlightButton(this); updateChecklist();">${o}</button>`).join('')}
-                </div>
-            </div>
-            <div class="section">
-                <h3>□ 발진기 사용 시간 □</h3>
-                <input type="number" style="width: 200px;" placeholder="시간 입력" oninput="selections.oscTime=this.value; updateChecklist();"> 시간
-            </div>
-        `;
-        document.getElementById('options').innerHTML = html;
+        document.getElementById('options').innerHTML = `<div class="section"><h3>□ 헤드 □</h3><div class="button-group">${heads.map(h => `<button onclick="selections.head='${h}'; highlightButton(this); updateChecklist();">${h}</button>`).join('')}</div></div><div class="section"><h3>□ 발진기 □</h3><div class="button-group">${oscs.map(o => `<button onclick="selections.oscillator='${o}'; highlightButton(this); updateChecklist();">${o}</button>`).join('')}</div></div><div class="section"><h3>□ 시간 □</h3><input type="number" oninput="selections.oscTime=this.value; updateChecklist();"> 시간</div>`;
         updateChecklist();
     }
+    function highlightButton(btn) { Array.from(btn.parentElement.children).forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); }
+    function updateInfo() { selections.serial = document.getElementById('serial').value; selections.company = document.getElementById('company').value; selections.name = document.getElementById('name').value; selections.contact = document.getElementById('contact').value; if(document.getElementById('extraNote')) selections.note = document.getElementById('extraNote').value; updateChecklist(); }
+    function goToNextPage() { if (!selections.laser || !selections.company || !selections.contact) return alert("필수 정보를 입력해주세요."); document.getElementById('mainPage').style.display = 'none'; document.getElementById('nextPage').style.display = 'block'; const mainIssues = ['절단이상', '센싱이상', '칠러이상', '발진기알람', '기타']; document.getElementById('issueButtons').innerHTML = mainIssues.map(i => `<button onclick="handleIssueSelection('${i}', this)">${i}</button>`).join(''); }
+    function handleIssueSelection(issue, btn) { highlightButton(btn); selections.issue = issue; document.getElementById('subIssueContainer').innerHTML = ""; showSolution(issue); updateChecklist(); }
+    function showSolution(key) { document.getElementById('solutionPage').style.display = 'block'; const options = solutionData[key] || [{title:'정밀 점검', desc:'상태 확인 후 체크.'}]; document.getElementById('solutionContent').innerHTML = options.map((opt, idx) => `<div class="solution-item"><div style="display: flex; gap: 10px;"><input type="checkbox" id="chk_${idx}" onchange="updateSolutions()"><div style="text-align: left;"><strong>${opt.title}</strong><p style="font-size: 12px; margin: 0;">${opt.desc}</p>${opt.input ? `<input type="text" placeholder="(${opt.unit})" oninput="updateSolutions()">` : ''}</div></div></div>`).join(''); }
+    function updateSolutions() { selections.solutions = []; document.querySelectorAll('.solution-item').forEach(item => { const chk = item.querySelector('input[type="checkbox"]'); if (chk.checked) { const title = item.querySelector('strong').innerText; const valInput = item.querySelector('input[type="text"]'); selections.solutions.push(valInput ? `${title}(${valInput.value})` : title); } }); updateChecklist(); }
+    function updateChecklist() { const content = document.getElementById('checklistContent'); let html = ""; for (let key in selections) { if (selections[key] && key !== 'solutions') html += `<li><strong>${labels[key]}:</strong> ${selections[key]}</li>`; } if (selections.solutions.length > 0) html += `<li><strong>조치:</strong><br>${selections.solutions.join('<br>')}</li>`; content.innerHTML = html || "<li>선택된 정보 없음</li>"; }
+    function toggleChecklist() { document.getElementById('checklist').classList.toggle('hidden'); }
 
-    function highlightButton(btn) {
-        Array.from(btn.parentElement.children).forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-    }
-
-    function updateInfo() {
-        selections.serial = document.getElementById('serial').value;
-        selections.company = document.getElementById('company').value;
-        selections.name = document.getElementById('name').value;
-        selections.contact = document.getElementById('contact').value;
-        if(document.getElementById('extraNote')) selections.note = document.getElementById('extraNote').value;
-        updateChecklist();
-    }
-
-    function goToNextPage() {
-        if (!selections.laser || !selections.company || !selections.contact) {
-            alert("레이저 종류, 업체명, 연락처는 필수 입력 사항입니다.");
-            return;
-        }
-        document.getElementById('mainPage').style.display = 'none';
-        document.getElementById('nextPage').style.display = 'block';
-        
-        const mainIssues = ['절단이상', '센싱이상', '칠러이상', '발진기알람', '집진기이상', '테이블 이상', '기타'];
-        document.getElementById('issueButtons').innerHTML = mainIssues.map(i => 
-            `<button onclick="handleIssueSelection('${i}', this)">${i}</button>`
-        ).join('');
-    }
-
-    function handleIssueSelection(issue, btn) {
-        highlightButton(btn);
-        selections.issue = issue;
-        selections.subIssue = "";
-        selections.solutions = [];
-        
-        const subContainer = document.getElementById('subIssueContainer');
-        const solPage = document.getElementById('solutionPage');
-        solPage.style.display = 'none';
-
-        if (issue === '절단이상') {
-            const subs = ['치수불량', '절단면불량', '피어싱불량', '기타'];
-            subContainer.innerHTML = `
-                <div class="section">
-                    <h3>□ 상세 현상 □</h3>
-                    <div class="button-group">
-                        ${subs.map(s => `<button onclick="handleSubIssueSelection('${s}', this)">${s}</button>`).join('')}
-                    </div>
-                </div>`;
-        } else if (issue === '발진기알람') {
-            const alarms = ['11', '18', '21', '25', '17', '27', '28', '기타'];
-            subContainer.innerHTML = `
-                <div class="section">
-                    <h3>□ 알람 번호 선택 □</h3>
-                    <div class="button-group">
-                        ${alarms.map(a => `<button onclick="handleSubIssueSelection('${a}', this)">${a}</button>`).join('')}
-                    </div>
-                </div>`;
-        } else {
-            subContainer.innerHTML = "";
-            showSolution(issue);
-        }
-        updateChecklist();
-    }
-
-    function handleSubIssueSelection(sub, btn) {
-        highlightButton(btn);
-        selections.subIssue = sub;
-        showSolution(sub);
-        updateChecklist();
-    }
-
-    function showSolution(key) {
-        const solPage = document.getElementById('solutionPage');
-        const content = document.getElementById('solutionContent');
-        solPage.style.display = 'block';
-        
-        // 데이터가 없으면 정밀 점검 리스트 기본 노출
-        const options = solutionData[key] || deepCheckList;
-        
-        content.innerHTML = options.map((opt, idx) => `
-            <div class="solution-item">
-                <div style="display: flex; align-items: flex-start; gap: 10px;">
-                    <input type="checkbox" id="chk_${idx}" style="transform: scale(1.5);" onchange="updateSolutions()">
-                    <div style="text-align: left;">
-                        <strong style="font-size: 16px;">${opt.title}</strong>
-                        <p style="margin: 5px 0; font-size: 13px; color: #666;">${opt.desc}</p>
-                        ${opt.link ? `<a href="${opt.link}" target="_blank" class="yt-link">📺 유튜브 가이드 보기</a>` : ''}
-                        ${opt.input ? `<input type="text" placeholder="수치 입력 (${opt.unit})" style="width: 150px; padding: 5px; margin-top: 5px;" oninput="updateSolutions()">` : ''}
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    function updateSolutions() {
-        selections.solutions = [];
-        document.querySelectorAll('.solution-item').forEach(item => {
-            const chk = item.querySelector('input[type="checkbox"]');
-            if (chk.checked) {
-                const title = item.querySelector('strong').innerText;
-                const valInput = item.querySelector('input[type="text"]');
-                const val = valInput ? `(${valInput.value})` : "";
-                selections.solutions.push(title + val);
-            }
-        });
-        updateChecklist();
-    }
-
-    function updateChecklist() {
-        const content = document.getElementById('checklistContent');
-        let html = "";
-        for (let key in selections) {
-            if (selections[key] && key !== 'solutions') {
-                html += `<li><strong>${labels[key]}:</strong> ${selections[key]}</li>`;
-            }
-        }
-        if (selections.solutions.length > 0) {
-            html += `<li><strong>조치사항:</strong><br>${selections.solutions.join('<br>')}</li>`;
-        }
-        content.innerHTML = html || "<li>입력된 정보 없음</li>";
-    }
-
-    function toggleChecklist() {
-        document.getElementById('checklist').classList.toggle('hidden');
-    }
-
-    // 🚀 최종 전송 함수 (중요!)
     async function submitToHosting() {
-        if (!selections.company || !selections.contact) {
-            alert("업체명과 연락처를 다시 확인해 주세요.");
-            return;
-        }
-
-        // 여기에 동주님의 구글 웹 앱 주소를 넣어주세요!
+        if (!selections.company || !selections.contact) return alert("업체명과 연락처 필수!");
+        
+        // 🚀 동주님의 구글 웹 앱 URL이 이미 적용되었습니다.
         const scriptURL = 'https://script.google.com/macros/s/AKfycbzb7atFl_gZq5C2FwV_9wYzzZKx1Kzsu0ucF5PV8KJoas7rDsLnDp8yjW6y-2b-aWbb/exec';
 
-        const finalData = {
-            timestamp: new Date().toLocaleString(),
-            ...selections,
-            solutions: selections.solutions.join(', ')
-        };
-
+        const finalData = { timestamp: new Date().toLocaleString(), ...selections, solutions: selections.solutions.join(', ') };
         try {
-            await fetch(scriptURL, { 
-                method: 'POST', 
-                body: JSON.stringify(finalData) 
-            });
-            alert("성공적으로 접수되었습니다. 담당 엔지니어가 곧 연락드립니다.");
+            await fetch(scriptURL, { method: 'POST', body: JSON.stringify(finalData) });
+            alert("성공적으로 접수되었습니다!");
             location.reload();
         } catch (error) {
-            alert("전송 중 오류가 발생했습니다. 구글 시트 주소를 확인해 주세요.");
+            alert("전송 중 오류 발생! 구글 설정을 확인하세요.");
         }
     }
 </script>
-
 </body>
 </html>
